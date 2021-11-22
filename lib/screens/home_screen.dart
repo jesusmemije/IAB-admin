@@ -82,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case 1:
         return const WelcomeScreen();
       case 2:
-        return GuestsScreen();
+        return const GuestsScreen();
       case 3:
         return ResumeScreen();
 

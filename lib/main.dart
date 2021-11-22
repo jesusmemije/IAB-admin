@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invitacionaboda_admin/screens/add_guest_screen.dart';
+import 'package:invitacionaboda_admin/screens/edit_guest_screen.dart';
 import 'package:invitacionaboda_admin/screens/screens.dart';
 import 'package:invitacionaboda_admin/shared_prefs/user_preferences.dart';
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         '/login' : ( _ ) => const LoginScreen(),
         '/home'  : ( _ ) => const HomeScreen(),
         '/add_guest'  : ( _ ) => const AddGuestScreen(),
+        '/edit_guest'  : ( _ ) => const EditGuestScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.pink,
