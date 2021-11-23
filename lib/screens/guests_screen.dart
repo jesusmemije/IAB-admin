@@ -8,7 +8,7 @@ import 'package:invitacionaboda_admin/search/guest_search.dart';
 import 'package:invitacionaboda_admin/shared_prefs/user_preferences.dart';
 
 class GuestsScreen extends StatefulWidget {
-  GuestsScreen({Key? key}) : super(key: key);
+  const GuestsScreen({Key? key}) : super(key: key);
 
   @override
   State<GuestsScreen> createState() => _GuestsScreenState();
@@ -74,15 +74,6 @@ class _GuestsScreenState extends State<GuestsScreen> {
     index = index + 1;
 
     return Card(
-      /* shape: const RoundedRectangleBorder(
-        side: BorderSide(color: Colors.black54, width: 0.6),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(0.0),
-          bottomLeft: Radius.circular(26.0),
-          bottomRight: Radius.circular(0.0),
-          topRight: Radius.circular(26.0)
-        ),
-      ), */
       elevation: 0.0,
       margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
       child: Container(

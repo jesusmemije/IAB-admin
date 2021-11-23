@@ -15,6 +15,9 @@ class GuestsProvider {
     final Map<String, dynamic> decodedData = json.decode(resp.body);
     final List<GuestModel> listGuests = [];
 
+    // ignore: avoid_print
+    print(decodedData);
+
     decodedData.forEach((id, guest) {
 
       final guestTemp = GuestModel.fromJson(guest);
@@ -79,6 +82,17 @@ class GuestsProvider {
     } else {
       return false;
     }
+
+  }
+
+  Future<Map<String, dynamic>> getDataQR( int idNovios, int idInvitadoADB) async {
+
+    final url = '$_url/getDataQR.php?idNovios=$idNovios&idInvitadoADB=$idInvitadoADB';
+    var response = await http.get( Uri.parse(url) );
+
+    final Map<String, dynamic> dataLogin = json.decode(response.body);
+
+    return dataLogin;
 
   } 
 
