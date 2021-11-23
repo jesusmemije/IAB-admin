@@ -26,10 +26,12 @@ class MyApp extends StatelessWidget {
       initialRoute: logeado == false ? '/login' : '/home',
       debugShowCheckedModeBanner: false,
       routes: {
-        '/login' : ( _ ) => const LoginScreen(),
-        '/home'  : ( _ ) => const HomeScreen(),
-        '/add_guest'  : ( _ ) => const AddGuestScreen(),
-        '/edit_guest'  : ( _ ) => const EditGuestScreen(),
+        '/login'     : ( _ ) => const LoginScreen(),
+        '/home'      : ( _ ) => const HomeScreen(),
+        '/welcome'   : ( _ ) => const WelcomeScreen(),
+        '/guests'    : ( _ ) => const GuestsScreen(),
+        '/resume'    : ( _ ) => ResumeScreen(),
+        '/add_guest' : ( _ ) => const AddGuestScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.pink,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:invitacionaboda_admin/providers/guests_provider.dart';
 import 'package:invitacionaboda_admin/screens/guests_screen.dart';
 import 'package:invitacionaboda_admin/screens/resume_screen.dart';
 import 'package:invitacionaboda_admin/screens/welcome_screen.dart';
@@ -20,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 1;
   final globalKey = GlobalKey<ScaffoldState>();
 
+  final guestsProvider = GuestsProvider();
+
   @override
   Widget build(BuildContext context) {
 
@@ -32,7 +37,77 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         elevation: 8.0,
         child: const Icon(FontAwesomeIcons.qrcode),
-        onPressed: (){}
+        onPressed: () async {
+
+          String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#e91e63', 'Cancelar', false, ScanMode.QR);
+          
+          if( barcodeScanRes == '-1' ) {
+            return;
+          }
+
+          if ( !barcodeScanRes.contains('http') ) {
+            Fluttertoast.showToast(msg: 'El resultado del QR no tiene una estructura válida');
+            return;
+          }
+
+          var uri = Uri.dataFromString(barcodeScanRes);
+          Map getParametro = uri.queryParameters;
+
+          if ( getParametro['adc'] == '' ) {
+            Fluttertoast.showToast(msg: 'El resultado del QR no existe');
+            return;
+          }
+          
+          var idInvitadoADB = int.parse( getParametro['adc'] );
+
+          // ignore: avoid_print
+          print(idInvitadoADB);
+
+          Map response = await guestsProvider.getDataQR(prefs.idNovios, idInvitadoADB);
+
+          // ignore: avoid_print
+          // print(response);
+
+          if (response['ok'] == true) {
+            // ignore: avoid_print
+            print(response['apodo']);
+          } else {
+            Fluttertoast.showToast(msg: 'No hay resultados');
+            return;
+          }
+
+          showModalBottomSheet<void>(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                height: 200,
+                color: Colors.transparent,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text( 
+                        'Apodo: ' + response['apodo'] + '\n'
+                        'Nombre: ' + response['nombre'] + '\n'
+                        'A. Paterno: ' + response['aPaterno'] + '\n'
+                        'A. Materno: ' + response['aMaterno'] + '\n'
+                        'Mesa: ' + response['mesa'] + '\n'
+                        'No. boletos: ' + response['boletos']
+                      ),
+                      const SizedBox(height: 10.0),
+                      ElevatedButton(
+                        child: const Text('Cerrar'),
+                        onPressed: () => Navigator.pop(context),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+
+        }
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

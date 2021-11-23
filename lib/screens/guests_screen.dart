@@ -74,8 +74,8 @@ class _GuestsScreenState extends State<GuestsScreen> {
     index = index + 1;
 
     return Card(
-      elevation: 1,
-      margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
+      elevation: 0.0,
+      margin: const EdgeInsets.symmetric(horizontal: 0.0, vertical: 4.0),
       child: Container(
         color: Colors.white,
         child: ListTile(
