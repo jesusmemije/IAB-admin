@@ -123,8 +123,11 @@ class _GuestsScreenState extends State<GuestsScreen> {
               ),
               IconButton(
                 icon: const Icon(Icons.edit),
-                onPressed: () {
-                  
+                onPressed: () async {
+                  await Navigator.pushNamed(context, '/edit_guest', arguments: guest);
+                  setState(() {
+                    // Espera a que se cierre para refrescar
+                  });
                 }
               ),
             ],

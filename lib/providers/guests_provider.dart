@@ -65,6 +65,24 @@ class GuestsProvider {
       return false;
     }
 
+  }
+
+  Future<bool> editGuest( GuestModel guestModel ) async {
+
+    final url = '$_url/editGuest.php';
+
+    final response = await http.post( Uri.parse(url), body: guestModelToJson(guestModel) );
+    final decodedData = json.decode(response.body);
+
+    // ignore: avoid_print
+    print(decodedData);
+
+    if ( decodedData['ok'] == true ) {
+      return true;
+    } else {
+      return false;
+    }
+
   } 
 
   Future<bool> updateAssistence( int idInvitado, int asistioBoda) async {

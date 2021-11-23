@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:invitacionaboda_admin/screens/add_guest_screen.dart';
+import 'package:invitacionaboda_admin/screens/edit_guest_screen.dart';
 import 'package:invitacionaboda_admin/screens/screens.dart';
 import 'package:invitacionaboda_admin/shared_prefs/user_preferences.dart';
 
