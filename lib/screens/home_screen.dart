@@ -53,8 +53,13 @@ class _HomeScreenState extends State<HomeScreen> {
           var uri = Uri.dataFromString(barcodeScanRes);
           Map getParametro = uri.queryParameters;
 
+          if ( !getParametro.containsKey('adc') ) {
+            Fluttertoast.showToast(msg: 'El resultado del QR no es válido');
+            return;
+          }
+
           if ( getParametro['adc'] == '' ) {
-            Fluttertoast.showToast(msg: 'El resultado del QR no existe');
+            Fluttertoast.showToast(msg: 'El resultado del QR está vacío');
             return;
           }
           
@@ -71,13 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
             context: context,
             builder: (BuildContext context) {
               return Container(
-                height: 200,
+                height: 250,
+                margin: const EdgeInsets.symmetric(horizontal: 24.0),
                 color: Colors.transparent,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
+                    children: [
                       Text( 
                         'Apodo: ' + response['apodo'] + '\n'
                         'Nombre: ' + response['nombre'] + '\n'
@@ -85,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         'A. Materno: ' + response['aMaterno'] + '\n'
                         'Mesa: ' + response['mesa'] + '\n'
                         'No. boletos: ' + response['boletos'] + '\n'
-                        'Acompañantes: ' + response['acompanantes']
+                        'Acompañantes: ' + response['acompanantes'],
+                        style: const TextStyle(height: 1.2),
                       ),
                       const SizedBox(height: 10.0),
                       ElevatedButton(
