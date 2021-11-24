@@ -85,6 +85,24 @@ class GuestsProvider {
 
   } 
 
+  Future<bool> deleteGuest( int idInvitado ) async {
+
+    final url = '$_url/deleteGuest.php?idInvitado=$idInvitado';
+    final response = await http.get( Uri.parse(url) );
+
+    final decodedData = json.decode(response.body);
+
+    // ignore: avoid_print
+    print(decodedData);
+
+    if ( decodedData['ok'] == true ) {
+      return true;
+    } else {
+      return false;
+    }
+
+  }
+
   Future<bool> updateAssistence( int idInvitado, int asistioBoda) async {
 
     final url = '$_url/updateAssistence.php?idInvitado=$idInvitado&asistioBoda=$asistioBoda';

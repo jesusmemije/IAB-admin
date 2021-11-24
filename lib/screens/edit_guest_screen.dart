@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invitacionaboda_admin/models/guest_model.dart';
 import 'package:invitacionaboda_admin/providers/guests_provider.dart';
 import 'package:invitacionaboda_admin/providers/type_guest_provider.dart';
@@ -57,7 +58,7 @@ class _EditGuestScreenState extends State<EditGuestScreen> {
                   const SizedBox(height: 10.0),
                   _textNumBoletos(),
                   const SizedBox(height: 20.0),
-                  _buttomSave()
+                  _buttomSaveDelete()
                 ],
               ),
             ),
@@ -223,23 +224,35 @@ class _EditGuestScreenState extends State<EditGuestScreen> {
     );
   }
 
-  Widget _buttomSave(){
+  Widget _buttomSaveDelete(){
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded (
+        Expanded(
           child: ElevatedButton.icon(
             icon: const Icon(Icons.save),
-            label:  const Text('Editar'),
-            onPressed: ( _guardando ) ? null : _saveForm,
+            label: const Text('Editar'),
+            onPressed: (_guardando) ? null : _saveForm,
             style: ElevatedButton.styleFrom(
                 primary: Theme.of(context).primaryColor,
                 padding: const EdgeInsets.symmetric(vertical: 10),
-                textStyle: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold
-                )
+                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
+            ),
+          ),
+        ),
+        const SizedBox(width: 6.0),
+        Expanded(
+          child: ElevatedButton.icon(
+            icon: const Icon(Icons.delete_forever),
+            label: const Text('Eliminar'),
+            onPressed: () {
+              _showMyDialog(context);
+            },
+            style: ElevatedButton.styleFrom(
+                primary: Colors.grey,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
             ),
           ),
         ),
@@ -264,22 +277,60 @@ class _EditGuestScreenState extends State<EditGuestScreen> {
       } else {
         mostrarSnackbar("Hemos tenido un problema al actualizar al invitado");
       }
-
       setState(() { _guardando = false; });
-
     });
     
   }
 
-  void mostrarSnackbar( String mensaje ) {
+  Future _showMyDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (_) => _buildAlertDialog()).then((value) 
+      {
+        if (value != null && value == 'aceptar'){
+          Navigator.pop(context);
+        }
+      });
+  }
 
+  Widget _buildAlertDialog() {
+    return AlertDialog(
+      title: const Text('Confirmación'),
+      content: const Text("¿Seguro que quieres eliminar este invitado?"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      actions: [
+        TextButton(
+          child: const Text("Cancelar"),
+          onPressed: () {
+            Navigator.pop(context);
+          }
+        ),
+        TextButton(
+          child: const Text("Aceptar"),
+          onPressed: () {
+            final response = guestsProvider.deleteGuest(guestModel.idInvitado);
+            response.then((value){
+              if( value ){
+                Fluttertoast.showToast(msg: 'Invitado eliminado con éxito');
+                Navigator.pop(context, 'aceptar');
+              } else {
+                mostrarSnackbar("Hemos tenido un problema al eliminar al invitado");
+                Navigator.pop(context);
+              }
+            });
+          }
+        ),
+      ],
+    );
+  }
+
+  void mostrarSnackbar( String mensaje ) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text( mensaje ),
           duration: const Duration( milliseconds: 3500 ),
         ),
       );
-
   }
 
 }

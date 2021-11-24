@@ -60,18 +60,9 @@ class _HomeScreenState extends State<HomeScreen> {
           
           var idInvitadoADB = int.parse( getParametro['adc'] );
 
-          // ignore: avoid_print
-          print(idInvitadoADB);
-
           Map response = await guestsProvider.getDataQR(prefs.idNovios, idInvitadoADB);
 
-          // ignore: avoid_print
-          // print(response);
-
-          if (response['ok'] == true) {
-            // ignore: avoid_print
-            print(response['apodo']);
-          } else {
+          if (response['ok'] == false) {
             Fluttertoast.showToast(msg: 'No hay resultados');
             return;
           }
@@ -93,7 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         'A. Paterno: ' + response['aPaterno'] + '\n'
                         'A. Materno: ' + response['aMaterno'] + '\n'
                         'Mesa: ' + response['mesa'] + '\n'
-                        'No. boletos: ' + response['boletos']
+                        'No. boletos: ' + response['boletos'] + '\n'
+                        'Acompañantes: ' + response['acompanantes']
                       ),
                       const SizedBox(height: 10.0),
                       ElevatedButton(

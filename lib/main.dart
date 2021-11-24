@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
         '/guests'    : ( _ ) => const GuestsScreen(),
         '/resume'    : ( _ ) => ResumeScreen(),
         '/add_guest' : ( _ ) => const AddGuestScreen(),
+        '/edit_guest' : ( _ ) => const EditGuestScreen(),
       },
       theme: ThemeData(
         primarySwatch: Colors.pink,
