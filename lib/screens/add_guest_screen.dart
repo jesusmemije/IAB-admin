@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invitacionaboda_admin/models/guest_model.dart';
 import 'package:invitacionaboda_admin/models/type_guest_model.dart';
 import 'package:invitacionaboda_admin/providers/guests_provider.dart';
@@ -254,6 +255,18 @@ class _AddGuestScreenState extends State<AddGuestScreen> {
             )
           ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              FontAwesomeIcons.calendarCheck,
+              color: Colors.black,
+              size: 18,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/guests_by_table');
+            },
+          )
+        ],
         elevation: 2.0,
         backgroundColor: Colors.white,
       ),

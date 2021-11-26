@@ -172,11 +172,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Map response = await loginProvider.loginValidate(_username, _password);
 
-      // ignore: avoid_print
-      print(response);
-
-      //await Future.delayed(Duration(seconds: 2));
-
       if (response['ok'] == true) {
 
         prefs.logeado  = true;

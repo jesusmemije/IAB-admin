@@ -15,9 +15,6 @@ class GuestsProvider {
     final Map<String, dynamic> decodedData = json.decode(resp.body);
     final List<GuestModel> listGuests = [];
 
-    // ignore: avoid_print
-    print(decodedData);
-
     decodedData.forEach((id, guest) {
 
       final guestTemp = GuestModel.fromJson(guest);
@@ -56,9 +53,6 @@ class GuestsProvider {
     final response = await http.post( Uri.parse(url), body: guestModelToJson(guestModel) );
     final decodedData = json.decode(response.body);
 
-    // ignore: avoid_print
-    print(decodedData);
-
     if ( decodedData['ok'] == true ) {
       return true;
     } else {
@@ -73,9 +67,6 @@ class GuestsProvider {
 
     final response = await http.post( Uri.parse(url), body: guestModelToJson(guestModel) );
     final decodedData = json.decode(response.body);
-
-    // ignore: avoid_print
-    print(decodedData);
 
     if ( decodedData['ok'] == true ) {
       return true;
@@ -92,9 +83,6 @@ class GuestsProvider {
 
     final decodedData = json.decode(response.body);
 
-    // ignore: avoid_print
-    print(decodedData);
-
     if ( decodedData['ok'] == true ) {
       return true;
     } else {
@@ -109,9 +97,6 @@ class GuestsProvider {
     final response = await http.get( Uri.parse(url) );
 
     final decodedData = json.decode(response.body);
-
-    // ignore: avoid_print
-    print(decodedData);
 
     if ( decodedData['ok'] == true ) {
       return true;
@@ -131,5 +116,27 @@ class GuestsProvider {
     return dataLogin;
 
   } 
+
+  Future<List<dynamic>> getTablesByGroup( int idNovios ) async {
+
+    final url = '$_url/getGuestsByTable.php?idNovios=$idNovios';
+    var response = await http.get( Uri.parse(url) );
+
+    final dataResponse = json.decode(response.body);
+
+    return dataResponse;
+
+  }
+
+  Future<List<dynamic>> getGuestsByTable( int idNovios, int mesa ) async {
+
+    final url = '$_url/getGuestsByTable.php?idNovios=$idNovios&mesa=$mesa';
+    var response = await http.get( Uri.parse(url) );
+
+    final dataResponse = json.decode(response.body);
+
+    return dataResponse;
+
+  }
 
 }
