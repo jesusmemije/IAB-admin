@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:invitacionaboda_admin/models/guest_model.dart';
 import 'package:invitacionaboda_admin/providers/guests_provider.dart';
 import 'package:invitacionaboda_admin/shared_prefs/user_preferences.dart';
 
@@ -149,9 +150,9 @@ class _GuestsByTableScreenState extends State<GuestsByTableScreen> {
 
   Widget _showGuestsByTable() {
 
-    return FutureBuilder<List<dynamic>>(
+    return FutureBuilder(
       future: guestsProvider.getGuestsByTable( prefs.idNovios, int.parse(_idMesaSelected) ),
-      builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<GuestModel>> snapshot) {
 
         final guests = snapshot.data;
 
@@ -188,7 +189,7 @@ class _GuestsByTableScreenState extends State<GuestsByTableScreen> {
     );
   }
 
-  Widget _crearItemGuest( BuildContext context, final guest, int index ) {
+  Widget _crearItemGuest( BuildContext context, GuestModel guest, int index ) {
 
     index = index + 1;
 
@@ -200,11 +201,11 @@ class _GuestsByTableScreenState extends State<GuestsByTableScreen> {
         child: ListTile(
           contentPadding: const EdgeInsets.only(left: 20, top: 2, bottom: 2, right: 20),
           title: Text(
-            'Apodo: ' + guest['apodo'],
+            'Apodo: ' + guest.apodo,
             style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
           ),
           subtitle: Text(
-            'Nombre: ' + guest['nombre']
+            'Nombre: '+guest.nombre+' '+guest.aPaterno+' '+guest.aMaterno
           ),
           trailing: Row(
             mainAxisSize: MainAxisSize.min,

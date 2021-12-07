@@ -128,14 +128,23 @@ class GuestsProvider {
 
   }
 
-  Future<List<dynamic>> getGuestsByTable( int idNovios, int mesa ) async {
+  Future<List<GuestModel>> getGuestsByTable( int idNovios, int mesa ) async {
 
     final url = '$_url/getGuestsByTable.php?idNovios=$idNovios&mesa=$mesa';
     var response = await http.get( Uri.parse(url) );
 
-    final dataResponse = json.decode(response.body);
+    final Map<String, dynamic> decodedData = json.decode(response.body);
+    final List<GuestModel> listGuests = [];
 
-    return dataResponse;
+    decodedData.forEach((id, guest) {
+
+      final guestTemp = GuestModel.fromJson(guest);
+
+      listGuests.add( guestTemp );
+
+    });
+
+    return listGuests;
 
   }
 
