@@ -1,4 +1,6 @@
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:invitacionaboda_admin/providers/guests_provider.dart';
@@ -31,6 +33,8 @@ class _GuestsByTableScreenState extends State<GuestsByTableScreen> {
           child: Column(
             children: [
               _dropDownTables(),
+              const SizedBox(height: 10.0),  
+              _idMesaSelected == '' ? Container() : _showGeneralDescription(), 
               const SizedBox(height: 10.0),  
               _idMesaSelected == '' ? _notSelected() : _showGuestsByTable(),    
             ],
@@ -68,6 +72,78 @@ class _GuestsByTableScreenState extends State<GuestsByTableScreen> {
             )
         );
       }
+    );
+  }
+
+  Widget _showGeneralDescription() {
+
+    return FutureBuilder<Map>(
+      future: guestsProvider.getDataTableGeneral(prefs.idNovios, int.parse(_idMesaSelected)),
+      builder: (BuildContext context, AsyncSnapshot<Map> snapshot) {
+
+        final dataGeneral = snapshot.data;
+
+        if (snapshot.hasData) {
+          if ( dataGeneral!.isNotEmpty ) {
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Card(
+                    elevation: 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 0.0),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            const Text('Boletos'),
+                            Text(dataGeneral['boletos'].toString(), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                          ],
+                        )
+                      )
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Card(
+                    elevation: 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 0.0),
+                      child: Center(
+                        child: Column(
+                          children: [
+                            const Text('Confirmados'),
+                            Text(dataGeneral['boletosConfirmados'].toString(), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold))
+                          ],
+                        )
+                      )
+                    ),
+                  ),
+                )
+              ],
+            );
+          } else {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(
+                      Icons.sentiment_very_dissatisfied,
+                      size: 40.0,
+                    ),
+                    SizedBox(height: 8.0),
+                    Text( 'No se encontró ningún dato', textAlign: TextAlign.center),
+                  ],
+                ),
+              ],
+            );
+          }
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 
@@ -130,6 +206,20 @@ class _GuestsByTableScreenState extends State<GuestsByTableScreen> {
           subtitle: Text(
             'Nombre: ' + guest['nombre']
           ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () async {
+                  await Navigator.pushNamed(context, '/edit_guest', arguments: guest);
+                  setState(() {
+                    // Espera a que se cierre para refrescar
+                  });
+                }
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -165,7 +255,7 @@ class _GuestsByTableScreenState extends State<GuestsByTableScreen> {
         title: Column(
           children: const [
             Text(
-              'Mesa - Invitados',
+              'Ver mesas',
               style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)
             )
           ],

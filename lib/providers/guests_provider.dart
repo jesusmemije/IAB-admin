@@ -139,4 +139,15 @@ class GuestsProvider {
 
   }
 
+  Future<Map<String, dynamic>> getDataTableGeneral( int idNovios, int mesa ) async {
+
+    final url = '$_url/getDataTableGeneral.php?idNovios=$idNovios&mesa=$mesa';
+    var response = await http.get( Uri.parse(url) );
+
+    final Map<String, dynamic> dataResponse = json.decode(response.body);
+
+    return dataResponse;
+
+  }
+
 }

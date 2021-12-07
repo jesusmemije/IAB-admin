@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:invitacionaboda_admin/providers/guests_provider.dart';
@@ -34,79 +35,95 @@ class _HomeScreenState extends State<HomeScreen> {
       drawerEnableOpenDragGesture: false,
       body: _callPage(currentIndex),
       bottomNavigationBar: _crearBottomNavigationBar( context ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: SpeedDial(
+        icon: FontAwesomeIcons.plus,
+        activeIcon: FontAwesomeIcons.times,
         elevation: 8.0,
-        child: const Icon(FontAwesomeIcons.qrcode),
-        onPressed: () async {
-
-          String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#e91e63', 'Cancelar', false, ScanMode.QR);
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.qr_code),
+            backgroundColor: Colors.indigo,
+            foregroundColor: Colors.white,
+            label: 'Scannear QR',
+            onTap: () async {
+              String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode('#e91e63', 'Cancelar', false, ScanMode.QR);
           
-          if( barcodeScanRes == '-1' ) {
-            return;
-          }
+              if( barcodeScanRes == '-1' ) {
+                return;
+              }
 
-          if ( !barcodeScanRes.contains('http') ) {
-            Fluttertoast.showToast(msg: 'El resultado del QR no tiene una estructura válida');
-            return;
-          }
+              if ( !barcodeScanRes.contains('http') ) {
+                Fluttertoast.showToast(msg: 'El resultado del QR no tiene una estructura válida');
+                return;
+              }
 
-          var uri = Uri.dataFromString(barcodeScanRes);
-          Map getParametro = uri.queryParameters;
+              var uri = Uri.dataFromString(barcodeScanRes);
+              Map getParametro = uri.queryParameters;
 
-          if ( !getParametro.containsKey('adc') ) {
-            Fluttertoast.showToast(msg: 'El resultado del QR no es válido');
-            return;
-          }
+              if ( !getParametro.containsKey('adc') ) {
+                Fluttertoast.showToast(msg: 'El resultado del QR no es válido');
+                return;
+              }
 
-          if ( getParametro['adc'] == '' ) {
-            Fluttertoast.showToast(msg: 'El resultado del QR está vacío');
-            return;
-          }
-          
-          var idInvitadoADB = int.parse( getParametro['adc'] );
+              if ( getParametro['adc'] == '' ) {
+                Fluttertoast.showToast(msg: 'El resultado del QR está vacío');
+                return;
+              }
+              
+              var idInvitadoADB = int.parse( getParametro['adc'] );
 
-          Map response = await guestsProvider.getDataQR(prefs.idNovios, idInvitadoADB);
+              Map response = await guestsProvider.getDataQR(prefs.idNovios, idInvitadoADB);
 
-          if (response['ok'] == false) {
-            Fluttertoast.showToast(msg: 'No hay resultados');
-            return;
-          }
+              if (response['ok'] == false) {
+                Fluttertoast.showToast(msg: 'No hay resultados');
+                return;
+              }
 
-          showModalBottomSheet<void>(
-            context: context,
-            builder: (BuildContext context) {
-              return Container(
-                height: 250,
-                margin: const EdgeInsets.symmetric(horizontal: 24.0),
-                color: Colors.transparent,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text( 
-                        'Apodo: ' + response['apodo'] + '\n'
-                        'Nombre: ' + response['nombre'] + '\n'
-                        'A. Paterno: ' + response['aPaterno'] + '\n'
-                        'A. Materno: ' + response['aMaterno'] + '\n'
-                        'Mesa: ' + response['mesa'] + '\n'
-                        'No. boletos: ' + response['boletos'] + '\n'
-                        'Acompañantes: ' + response['acompanantes'],
-                        style: const TextStyle(height: 1.2),
+              showModalBottomSheet<void>(
+                context: context,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: 250,
+                    margin: const EdgeInsets.symmetric(horizontal: 24.0),
+                    color: Colors.transparent,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text( 
+                            'Apodo: ' + response['apodo'] + '\n'
+                            'Nombre: ' + response['nombre'] + '\n'
+                            'A. Paterno: ' + response['aPaterno'] + '\n'
+                            'A. Materno: ' + response['aMaterno'] + '\n'
+                            'Mesa: ' + response['mesa'] + '\n'
+                            'No. boletos: ' + response['boletos'] + '\n'
+                            'Acompañantes: ' + response['acompanantes'],
+                            style: const TextStyle(height: 1.2),
+                          ),
+                          const SizedBox(height: 10.0),
+                          ElevatedButton(
+                            child: const Text('Cerrar'),
+                            onPressed: () => Navigator.pop(context),
+                          )
+                        ],
                       ),
-                      const SizedBox(height: 10.0),
-                      ElevatedButton(
-                        child: const Text('Cerrar'),
-                        onPressed: () => Navigator.pop(context),
-                      )
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               );
             },
-          );
-
-        }
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.airline_seat_recline_normal_sharp),
+            backgroundColor: Colors.deepOrange,
+            foregroundColor: Colors.white,
+            label: 'Ver mesas',
+            onTap: () {
+              Navigator.pushNamed(context, '/guests_by_table');
+            },
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
