@@ -42,4 +42,11 @@ class PreferenciasUsuario {
     _prefs.setString('recepcionFecha', value);
   }
 
+  String get correoRegistro {
+    return _prefs.getString('correoRegistro') ?? '';
+  }
+  set correoRegistro( String value ) {
+    _prefs.setString('correoRegistro', value);
+  }
+
 }

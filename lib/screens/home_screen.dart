@@ -123,6 +123,15 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.pushNamed(context, '/guests_by_table');
             },
           ),
+          SpeedDialChild(
+            child: const Icon(Icons.add_reaction_outlined),
+            backgroundColor: Colors.green,
+            foregroundColor: Colors.white,
+            label: 'Agregar invitado',
+            onTap: () {
+              Navigator.pushNamed(context, '/add_guest');
+            },
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -184,61 +193,68 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _crearDrawer() {
     return Drawer(
+      elevation: 0,
       child: Column(
         children: <Widget>[
-          const UserAccountsDrawerHeader(
+          UserAccountsDrawerHeader(
             currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.person,
-                size: 50.0,
+              backgroundColor: Colors.transparent,
+              child: Image.asset(
+                'assets/img/logo.png',
+                fit: BoxFit.cover,
               ),
             ),
-            accountName: Text( 'Invitación a boda' ),
-            accountEmail: Text( 'example@mail.com' ),
+            accountName: const Text( 'invitacionaboda.com' ),
+            accountEmail: Text( prefs.correoRegistro ),
           ),
           ListTile(
             leading: const CircleAvatar(
               child: Icon(
-                Icons.person_outline,
+                Icons.home,
                 color: Colors.white,
-                size: 30.0,
               ),
             ),
-            title: const Text("Profile Settings"),
-            onTap: () {},
+            title: const Text("Inicio"),
+            onTap: () {
+              Navigator.pop(context);
+            },
           ),
-          const ListTile(
-            leading: CircleAvatar(
+          ListTile(
+            leading: const CircleAvatar(
               child: Icon(
-                Icons.cached,
+                Icons.airline_seat_recline_normal_sharp,
                 color: Colors.white,
-                size: 30.0,
               ),
             ),
-            title: Text("Recenceter"),
+            title: const Text("Ver mesas"),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/guests_by_table');
+            },
+          ),
+          ListTile(
+            leading: const CircleAvatar(
+              child: Icon(
+                Icons.add_reaction_outlined,
+                color: Colors.white,
+              ),
+            ),
+            title: const Text("Agregar invitados"),
+            onTap: (){
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/add_guest');
+            },
           ),
           const Divider(),
           ListTile(
             leading: const CircleAvatar(
               child: Icon(
-                Icons.help_outline,
+                Icons.help,
                 color: Colors.white,
                 size: 30.0,
               ),
             ),
             title: const Text("Acerca de nosotros"),
-            onTap: () {},
-          ),
-          ListTile(
-            leading: const CircleAvatar(
-              child: Icon(
-                Icons.settings,
-                color: Colors.white,
-                size: 30.0,
-              ),
-            ),
-            title: const Text("Configuración"),
             onTap: () {},
           ),
           ListTile(
@@ -251,12 +267,42 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             title: const Text("Cerrar sesión"),
             onTap: () {
-              prefs.clear();
-              Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
+              showDialog(
+                context: context,
+                builder: (_) => _buildAlertDialog()
+              );
             },
+          ),
+          const ListTile(
+            title: Text('1.2.0'),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildAlertDialog() {
+
+    return AlertDialog(
+      title: const Text('Cerrar sesión'),
+      content: const Text("¿Seguro que quieres cerrar la sesión?"),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      actions: [
+        TextButton(
+          child: const Text("Cancelar"),
+          onPressed: () {
+            Navigator.pop(context);
+          }
+        ),
+        TextButton(
+          child: const Text("Aceptar"),
+          onPressed: () {
+            prefs.clear();
+            Navigator.pushNamedAndRemoveUntil(context, '/login', ModalRoute.withName('/login'));
+          }
+        ),
+      ],
+    );
+  }
+
 }
