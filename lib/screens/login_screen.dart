@@ -176,6 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         prefs.logeado  = true;
         prefs.idNovios = response['idNovios'];
+        prefs.recepcionFecha = response['recepcionFecha'];
 
         Navigator.pushNamedAndRemoveUntil(context, '/home', ModalRoute.withName('/home'));
 

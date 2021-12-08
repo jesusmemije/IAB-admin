@@ -159,4 +159,15 @@ class GuestsProvider {
 
   }
 
+  Future<Map> getTotalAssists( int idNovios ) async {
+
+    final url = '$_url/getTotalAssists.php?idNovios=$idNovios';
+    var response = await http.get( Uri.parse(url) );
+
+    final Map dataResponse = json.decode(response.body);
+
+    return dataResponse;
+
+  } 
+
 }
