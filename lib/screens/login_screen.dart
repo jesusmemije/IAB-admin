@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:invitacionaboda_admin/providers/login_provider.dart';
 import 'package:invitacionaboda_admin/shared_prefs/user_preferences.dart';
 
@@ -168,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
     form!.save();
 
     if (_username.isEmpty || _password.isEmpty) {
-      showMessage('El usuario y la contraseña son requeridos');
+      Fluttertoast.showToast(msg: 'El usuario y la contraseña son requeridos');
     } else {
 
       setState(() {
@@ -188,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushNamedAndRemoveUntil(context, '/home', ModalRoute.withName('/home'));
 
       } else {
-        showMessage( response['response'] );
+        Fluttertoast.showToast(msg: response['response']);
         setState(() {
           _progressLogin = false;
           _textBtnLogin = "LOGIN";
@@ -196,15 +197,4 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
-
-  void showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message,
-            textAlign: TextAlign.center, style: const TextStyle(fontSize: 15)),
-        duration: const Duration(seconds: 3),
-      ),
-    );
-  }
-
 }
