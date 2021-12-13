@@ -23,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen> {
   //Variables
   String _username = "";
   String _password = "";
+  String _textBtnLogin = "LOGIN";
+  bool _progressLogin = false;
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     /*Spacer(),*/
 
                     InkWell(
-                      onTap: validate,
+                      onTap: _progressLogin ? null : validate,
                       child: Container(
                         height: 45,
                         margin: const EdgeInsets.only(top: 32),
@@ -141,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 BorderRadius.all(Radius.circular(50))),
                         child: Center(
                           child: Text(
-                            'Login'.toUpperCase(),
+                            _textBtnLogin,
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),
@@ -168,7 +170,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_username.isEmpty || _password.isEmpty) {
       showMessage('El usuario y la contraseña son requeridos');
     } else {
-      showMessage('Espere mientras validamos sus datos ...');
+
+      setState(() {
+        _progressLogin = true;
+        _textBtnLogin = "VALIDANDO DATOS...";
+      });
 
       Map response = await loginProvider.loginValidate(_username, _password);
 
@@ -183,6 +189,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       } else {
         showMessage( response['response'] );
+        setState(() {
+          _progressLogin = false;
+          _textBtnLogin = "LOGIN";
+        });
       }
     }
   }
